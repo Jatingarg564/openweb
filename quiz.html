@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
+    <title>Quiz App</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;400&display=swap');
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        background-color: #b8c6db;
+        background-image: linear-gradient(315deg, #b8c6db 0%, #f5f7fa 100%);
+        font-family: 'Poppins', sans-serif;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        overflow: hidden;
+        margin: 0;
+        border-radius: 50%2; /* Make the background oval-shaped */
+    }
+    
+
+    .quiz-container {
+        background-color: #fff;
+        clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+        box-shadow: 0 0 10px 2px rgba(100, 100, 100, 0.1);
+        width: 1200px;
+        height: 692px; /* Adjust the height accordingly for the hexagonal shape */
+        overflow: hidden;
+        border-radius: 900px/150px; /* Adjust the value for rounded corners */
+        border:50px solid white;
+    }
+    
+    
+    
+
+      .quiz-toggle-container {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        margin-bottom: 1rem;
+        padding: 1rem;
+      }
+
+      .quiz-header {
+        padding: 4rem;
+      }
+
+      h2 {
+        padding: 1rem;
+        text-align: center;
+        margin: 0;
+      }
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      ul li {
+        font-size: 1.2rem;
+        margin: 1rem 0;
+      }
+
+      ul li label {
+        cursor: pointer;
+      }
+
+      button {
+        background-color: #8e44ad;
+        color: #fff;
+        border: none;
+        display: block;
+        width: 100%;
+        cursor: pointer;
+        font-size: 1.1rem;
+        font-family: inherit;
+        padding: 1.3rem;
+      }
+
+      button:hover {
+        background-color: #732d91;
+      }
+
+      button:focus {
+        outline: none;
+        background-color: #5e3370;
+      }
+
+      body.dark-mode {
+        --title-color: #f1f3f2;
+        --text-color: #c7d1cc;
+        --body-color: #1d2521;
+        --container-color: #2b2730;
+        --quiz-bg: #262626;
+        --quiz-border: #404040;
+        --quiz-box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.1);
+        --quiz-header-bg: #333;
+        --quiz-question-text: #fff;
+        --answer-bg: #555;
+        --answer-text: #fff;
+        --answer-hover: #444;
+        --submit-bg: #4CAF50;
+        --submit-text: #fff;
+        --submit-hover: #45a049;
+      }
+      
+      body.dark-mode .quiz-container {
+        background-color: var(--quiz-bg);
+        border: 1px solid var(--quiz-border);
+        box-shadow: var(--quiz-box-shadow);
+      }
+      
+      body.dark-mode .quiz-toggle-container {
+        background-color: var(--quiz-header-bg);
+      }
+      .quiz-toggle-container {
+        display: flex;
+        align-items: center;
+        justify-content: center; /* Center horizontally */
+        flex-direction: column; /* Align vertically */
+        margin-bottom: 1rem;
+        padding: 1rem;
+      }
+      
+      /* Add margin to the toggle label for better spacing */
+      .toggle-label {
+        margin-bottom: 0.5rem;
+      }
+      
+      body.dark-mode .quiz-header {
+        background-color: var(--quiz-header-bg);
+      }
+      
+      body.dark-mode h2 {
+        color: var(--quiz-question-text);
+      }
+      
+      body.dark-mode ul li label {
+        background-color: var(--answer-bg);
+        color: var(--answer-text);
+      }
+      
+      body.dark-mode ul li label:hover {
+        background-color: var(--answer-hover);
+      }
+      
+      body.dark-mode button {
+        background-color: var(--submit-bg);
+        color: var(--submit-text);
+      }
+      
+      body.dark-mode button:hover {
+        background-color: var(--submit-hover);
+      }
+      
+
+      .toggle-label {
+        margin-right: 0.5rem;
+      }
+
+      .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+      }
+
+      .toggle-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: 0.4s;
+        border-radius: 34px;
+      }
+
+      .toggle-slider:before {
+        position: absolute;
+        content: '';
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: white;
+        transition: 0.4s;
+        border-radius: 50%;
+      }
+
+      input:checked + .toggle-slider {
+        background-color: #2196f3;
+      }
+
+      input:checked + .toggle-slider:before {
+        transform: translateX(26px);
+      }
+    </style>
+  </head>
+
+  <body class="light-mode">
+    <div class="quiz-container" id="quiz">
+      <div class="toggle-container quiz-toggle-container">
+        <label class="toggle-label">Dark Mode</label>
+        <label class="toggle-switch">
+          <input type="checkbox" id="darkModeToggle" onclick="toggleDarkMode()" />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="quiz-header">
+        <h2 id="question">Question text</h2>
+        <ul>
+          <li>
+            <input type="radio" name="answer" id="a" class="answer" />
+            <label for="a" id="a_text">Question</label>
+          </li>
+
+          <li>
+            <input type="radio" name="answer" id="b" class="answer" />
+            <label for="b" id="b_text">Question</label>
+          </li>
+
+          <li>
+            <input type="radio" name="answer" id="c" class="answer" />
+            <label for="c" id="c_text">Question</label>
+          </li>
+
+          <li>
+            <input type="radio" name="answer" id="d" class="answer" />
+            <label for="d" id="d_text">Question</label>
+          </li>
+        </ul>
+      </div>
+      <button id="submit">Submit</button>
+    </div>
+    <script>
+
+      const quizData = [
+        {
+          question: 'Which language runs in a web browser?',
+          a: 'Java',
+          b: 'C',
+          c: 'Python',
+          d: 'JavaScript',
+          correct: 'd',
+        },
+        {
+          question: 'What does CSS stand for?',
+          a: 'Central Style Sheets',
+          b: 'Cascading Style Sheets',
+          c: 'Cascading Simple Sheets',
+          d: 'Cars SUVs Sailboats',
+          correct: 'b',
+        },
+        {
+          question: 'What does HTML stand for?',
+          a: 'Hypertext Markup Language',
+          b: 'Hypertext Markdown Language',
+          c: 'Hyperloop Machine Language',
+          d: 'Helicopters Terminals Motorboats Lamborginis',
+          correct: 'a',
+        },
+        {
+          question: 'What year was JavaScript launched?',
+          a: '1996',
+          b: '1995',
+          c: '1994',
+          d: 'none of the above',
+          correct: 'b',
+        },
+      ];
+
+      const quiz = document.getElementById('quiz');
+      const answerEls = document.querySelectorAll('.answer');
+      const questionEl = document.getElementById('question');
+      const a_text = document.getElementById('a_text');
+      const b_text = document.getElementById('b_text');
+      const c_text = document.getElementById('c_text');
+      const d_text = document.getElementById('d_text');
+      const submitBtn = document.getElementById('submit');
+      const darkModeToggle = document.getElementById('darkModeToggle');
+
+      let currentQuiz = 0;
+      let score = 0;
+
+      loadQuiz();
+
+      function loadQuiz() {
+        deselectAnswers();
+
+        const currentQuizData = quizData[currentQuiz];
+
+        questionEl.innerText = currentQuizData.question;
+        a_text.innerText = currentQuizData.a;
+        b_text.innerText = currentQuizData.b;
+        c_text.innerText = currentQuizData.c;
+        d_text.innerText = currentQuizData.d;
+      }
+
+      function deselectAnswers() {
+        answerEls.forEach((answerEl) => (answerEl.checked = false));
+      }
+
+      function getSelected() {
+        let answer;
+
+        answerEls.forEach((answerEl) => {
+          if (answerEl.checked) {
+            answer = answerEl.id;
+          }
+        });
+
+        return answer;
+      }
+
+      submitBtn.addEventListener('click', () => {
+        const answer = getSelected();
+
+        if (answer) {
+          if (answer === quizData[currentQuiz].correct) {
+            score++;
+          }
+
+          currentQuiz++;
+
+          if (currentQuiz < quizData.length) {
+            loadQuiz();
+          } else {
+            quiz.innerHTML = `
+              <h2>You answered ${score}/${quizData.length} questions correctly</h2>
+
+              <button onclick="location.reload()">Reload</button>
+            `;
+          }
+        }
+      });
+
+      function toggleDarkMode() {
+        const body = document.body;
+        body.classList.toggle('dark-mode');
+        body.classList.toggle('light-mode');
+      }
+    </script>
+  </body>
+</html>
